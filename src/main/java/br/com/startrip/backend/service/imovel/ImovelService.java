@@ -41,16 +41,16 @@ public class ImovelService {
 	}
 
 	public Page<Imovel> listarImoveisDeProprietario(Pageable pageable, Long idProprietario) {
-		return imovelRepository.findByProprietarioIdEqualsAndDeletedIsNot(pageable, idProprietario, true);
+		return imovelRepository.findByProprietarioIdEqualsAndDeletedIs(pageable, idProprietario, false);
 	}
 
 	public Imovel listarImoveisPorId(Long idImovel) {
-		return imovelRepository.findByIdAndDeletedIsNot(idImovel, true)
+		return imovelRepository.findByIdAndDeletedIs(idImovel, false)
 				.orElseThrow(() -> new IdImovelInexistenteException(idImovel));
 	}
 
 	public void excluirImovel(Long idImovel) {
-		Imovel imovelParaExcluir = imovelRepository.findByIdAndDeletedIsNot(idImovel, true)
+		Imovel imovelParaExcluir = imovelRepository.findByIdAndDeletedIs(idImovel, false)
 				.orElseThrow(() -> new IdImovelInexistenteException(idImovel));
 
 		if (anuncioRepository.existsByImovelAndDeletedIs(imovelParaExcluir, false)) {

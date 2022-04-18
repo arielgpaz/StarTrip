@@ -12,9 +12,9 @@ import br.com.startrip.backend.domain.Imovel;
 @Repository
 public interface ImovelRepository extends JpaRepository<Imovel, Long> {
 
-	Page<Imovel> findByProprietarioIdEqualsAndDeletedIsNot(Pageable pageable, Long idProprietario, boolean deleted);
+	Page<Imovel> findByProprietarioIdEqualsAndDeletedIs(Pageable pageable, Long idProprietario, boolean deleted);
 
-	Optional<Imovel> findByIdAndDeletedIsNot(Long id, boolean deleted);
+	Optional<Imovel> findByIdAndDeletedIs(Long id, boolean deleted);
 
 	Page<Imovel> findByDeletedIs(boolean deleted, Pageable pageable);
 

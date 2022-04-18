@@ -30,17 +30,24 @@ public class AnuncioService {
 	private AnuncioRepository anuncioRepository;
 
 	public Anuncio anunciarImovel(CadastrarAnuncioRequest cadastrarAnuncioRequest) {
-		Imovel imovelParaCadastrar = imovelRepository.findByIdAndDeletedIsNot(cadastrarAnuncioRequest.getIdImovel(), true)
+		Imovel imovelParaCadastrar = imovelRepository.findByIdAndDeletedIs(cadastrarAnuncioRequest.getIdImovel(), false)
 				.orElseThrow(() -> new IdImovelInexistenteException(cadastrarAnuncioRequest.getIdImovel()));
-
-		Usuario anunciante = usuarioRepository.findById(cadastrarAnuncioRequest.getIdAnunciante())
-				.orElseThrow(() -> new IdUsuarioInexistenteException(cadastrarAnuncioRequest.getIdAnunciante()));
 
 		if (anuncioRepository.existsByImovelIdAndDeletedIs(cadastrarAnuncioRequest.getIdImovel(), false)) {
 			throw new ImovelJaAnunciadoException(cadastrarAnuncioRequest.getIdImovel());
 		}
 
-		Anuncio anuncio = new Anuncio(cadastrarAnuncioRequest.getTipoAnuncio(), imovelParaCadastrar, anunciante, cadastrarAnuncioRequest.getValorDiaria(), cadastrarAnuncioRequest.getFormasAceitas(), cadastrarAnuncioRequest.getDescricao());
+		Usuario anunciante = usuarioRepository.findById(cadastrarAnuncioRequest.getIdAnunciante())
+				.orElseThrow(() -> new IdUsuarioInexistenteException(cadastrarAnuncioRequest.getIdAnunciante()));
+
+		Anuncio anuncio = Anuncio.builder()
+				.tipoAnuncio(cadastrarAnuncioRequest.getTipoAnuncio())
+				.imovel(imovelParaCadastrar)
+				.anunciante(anunciante)
+				.valorDiaria(cadastrarAnuncioRequest.getValorDiaria())
+				.formasAceitas(cadastrarAnuncioRequest.getFormasAceitas())
+				.descricao(cadastrarAnuncioRequest.getDescricao())
+				.build();
 
 		return anuncioRepository.save(anuncio);
 	}
