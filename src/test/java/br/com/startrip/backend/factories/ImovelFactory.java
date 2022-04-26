@@ -8,9 +8,9 @@ public class ImovelFactory {
 		return Imovel.builder()
 				.id(12L)
 				.endereco(EnderecoFactory.criaEndereco())
-				.tipoImovel(TipoImovel.CASA)
-				.identificacao("Casa de Jesus")
-				.proprietario(UsuarioFactory.criaUsuario())
+				.tipoImovel(TipoImovel.HOTEL)
+				.identificacao("Hotel dos romeiros")
+				.proprietario(UsuarioFactory.criaUsuarioAnunciante())
 				.deleted(false)
 				.build();
 	}
