@@ -44,6 +44,12 @@ public class PagarReservaService {
 			throw new StatusPagamentoException("Não é possível realizar o pagamento para esta reserva, pois ela não está no status PENDENTE.");
 		}
 
+//		this.alterarQuantidadePessoas(reserva);
+
 		return reservaRepository.save(reserva);
 	}
+//
+//	protected void alterarQuantidadePessoas(Reserva reserva) {
+//		reserva.setQuantidadePessoas(1);
+//	}
 }
