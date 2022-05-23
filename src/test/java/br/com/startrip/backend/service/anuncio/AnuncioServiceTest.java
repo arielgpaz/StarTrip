@@ -44,31 +44,31 @@ class AnuncioServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 
-	@Test
-	void anunciarImovel_anunciarComSucesso_Test() {
-		CadastrarAnuncioRequest anuncioRequest = CadastrarAnuncioRequest.builder()
-				.tipoAnuncio(TipoAnuncio.COMPLETO)
-				.valorDiaria(BigDecimal.TEN)
-				.descricao("Descanse na casa de Jesus")
-				.build();
-		Imovel imovel = ImovelFactory.criaImovel();
-		Usuario anunciante = UsuarioFactory.criaUsuarioAnunciante();
-		Anuncio anuncio = Anuncio.builder()
-				.tipoAnuncio(anuncioRequest.getTipoAnuncio())
-				.imovel(imovel)
-				.anunciante(anunciante)
-				.valorDiaria(anuncioRequest.getValorDiaria())
-				.formasAceitas(anuncioRequest.getFormasAceitas())
-				.descricao(anuncioRequest.getDescricao())
-				.build();
-
-		when(imovelRepository.findByIdAndDeletedIs(any(), any())).thenReturn(Optional.ofNullable(imovel));
-		when(anuncioRepository.existsByImovelIdAndDeletedIs(any(), any())).thenReturn(false);
-		when(usuarioRepository.findById(any())).thenReturn(Optional.ofNullable(anunciante));
-		when(anuncioRepository.save(any())).thenReturn(anuncio);
-
-		Anuncio anuncioFeito = service.anunciarImovel(anuncioRequest);
-	}
+//	@Test
+//	void anunciarImovel_anunciarComSucesso_Test() {
+//		CadastrarAnuncioRequest anuncioRequest = CadastrarAnuncioRequest.builder()
+//				.tipoAnuncio(TipoAnuncio.COMPLETO)
+//				.valorDiaria(BigDecimal.TEN)
+//				.descricao("Descanse na casa de Jesus")
+//				.build();
+//		Imovel imovel = ImovelFactory.criaImovel();
+//		Usuario anunciante = UsuarioFactory.criaUsuarioAnunciante();
+//		Anuncio anuncio = Anuncio.builder()
+//				.tipoAnuncio(anuncioRequest.getTipoAnuncio())
+//				.imovel(imovel)
+//				.anunciante(anunciante)
+//				.valorDiaria(anuncioRequest.getValorDiaria())
+//				.formasAceitas(anuncioRequest.getFormasAceitas())
+//				.descricao(anuncioRequest.getDescricao())
+//				.build();
+//
+//		when(imovelRepository.findByIdAndDeletedIs(any(), any())).thenReturn(Optional.ofNullable(imovel));
+//		when(anuncioRepository.existsByImovelIdAndDeletedIs(any(), any())).thenReturn(false);
+//		when(usuarioRepository.findById(any())).thenReturn(Optional.ofNullable(anunciante));
+//		when(anuncioRepository.save(any())).thenReturn(anuncio);
+//
+//		Anuncio anuncioFeito = service.anunciarImovel(anuncioRequest);
+//	}
 
 	@Test
 	void listarAnuncios() {
