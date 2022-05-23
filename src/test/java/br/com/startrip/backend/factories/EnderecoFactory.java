@@ -9,9 +9,9 @@ public class EnderecoFactory {
 				.cep("11222-333")
 				.logradouro("Rua dos Anjos")
 				.numero("2")
-				.bairro("Arcanjos")
+				.bairro("Centro")
 				.cidade("Louvores")
-				.complemento("Casa de ouro")
+				.complemento("Hotel com jardim na entrada")
 				.estado("Primeiro Estado")
 				.build();
 	}
