@@ -29,12 +29,12 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        jdbc.lob.non_contextual_creation: true
-        temp.use_jdbc_metadata_defaults: false
-        format_sql: false
+#        jdbc.lob.non_contextual_creation: true
+#        temp.use_jdbc_metadata_defaults: false
+        format_sql: true
         type: trace
     hibernate:
-      ddl-auto: none              # none,create,update
+      ddl-auto: update              # none,create,update
 
 logging:
   level:
