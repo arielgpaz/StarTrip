@@ -3,21 +3,6 @@ server:
     include-message: always
     include-binding-errors: always
 
-#spring:
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2
-#  datasource:
-#    url: jdbc:h2:file:~/tcc-h2-db
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-#  jpa:
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
-
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/startrip
@@ -29,12 +14,10 @@ spring:
     show-sql: false
     properties:
       hibernate:
-#        jdbc.lob.non_contextual_creation: true
-#        temp.use_jdbc_metadata_defaults: false
         format_sql: true
         type: trace
     hibernate:
-      ddl-auto: update              # none,create,update
+      ddl-auto: update              # none,create,update,validate
 
 logging:
   level:
