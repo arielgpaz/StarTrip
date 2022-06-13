@@ -1,6 +1,6 @@
 FROM openjdk:8-oracle
 
-ENV APP_NAME startrip
+ENV APP_NAME=startrip
 
 COPY ./target/${APP_NAME}.jar  /app/${APP_NAME}.jar
 
