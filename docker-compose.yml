@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  startrip:
+    image: 'startrip:1.0'
+    build:
+      context: .
+    container_name: startrip
+    ports:
+      - '8080:8080'
+    depends_on:
+      - startrip_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://startrip_db:5432/startrip
+      - SPRING_DATASOURCE_USERNAME=startrip
+      - SPRING_DATASOURCE_PASSWORD=startrip
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  startrip_db:
+    image: 'postgres:14.3'
+    container_name: startrip_db
+    volumes:
+      - /database/startrip:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=startrip
+      - POSTGRES_PASSWORD=startrip
