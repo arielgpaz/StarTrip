@@ -80,36 +80,6 @@ class ReservaControllerIntegrationTest {
 
     }
 
-    // Não deve ser possível reservar um imóvel com um período cuja diferença entre a data final e inicial seja menor que 1 dia
-    void deveRetornarBadRequestAoTentarReservarImovelComPeriodoInferiorAUmDia() {
-        // FIXME Esse teste não será executado, pois com a alteração da regra para forçar hora de inicio e fim, nunca acontecerá.
-        // A não ser que seja validado antes da alteração dos horários, porém não faria sentido
-        // A validação fica apenas como referência
-
-        Periodo periodoComMenosDeUmDiaDeDiferenca = PeriodoFixture
-            .get()
-            .valido()
-            .comDataHoraFinal(LocalDateTime.now())
-            .comDataHoraInicial(LocalDateTime.now())
-            .build();
-
-        CadastrarReservaRequest requestComDataInicialEFinalIguais = CadastrarReservaRequestFixture
-            .get()
-            .valido()
-            .comPeriodo(periodoComMenosDeUmDiaDeDiferenca)
-            .build();
-
-        given()
-            .contentType(ContentType.JSON)
-            .body(requestComDataInicialEFinalIguais)
-        .when()
-            .post(BASE_PATH)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.BAD_REQUEST.value())
-            .body("message", equalTo("Período inválido! O número mínimo de diárias precisa ser maior ou igual à 1."));
-    }
-
     @Test
     @Order(20)
     // Não deve ser possível reservar um imóvel cujo solicitante seja o mesmo anunciante
@@ -370,7 +340,7 @@ class ReservaControllerIntegrationTest {
 
     // R8 = 2021-11-27 > 2021-11-29 - Ambas fora após a existente
     @Test
-    @Order(66)
+    @Order(67)
     void deveReservarComSucessoComDatasSuperioresAExistente() {
         Periodo periodo = PeriodoFixture
             .get()
@@ -396,7 +366,7 @@ class ReservaControllerIntegrationTest {
 
     // R9 = 2021-11-15 > 2021-11-17 - Ambas fora antes da existente
     @Test
-    @Order(67)
+    @Order(68)
     void deveReservarComSucessoComDatasInferioresAExistente() {
         Periodo periodo = PeriodoFixture
             .get()

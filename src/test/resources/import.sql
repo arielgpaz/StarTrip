@@ -26,8 +26,8 @@ insert into usuario (id, cpf, data_nascimento, email, id_endereco, nome, senha) 
 insert into endereco (id, bairro, cep, cidade, complemento, estado, logradouro, numero) values (9, 'Centro', '96083-130', 'Lavras do Sul', '', 'RS', 'Rua dos Bobos', 0);
 insert into usuario (id, cpf, data_nascimento, email, id_endereco, nome, senha) values (null, '35792320101', '1980-01-01', 'usuario9@teste.com', 9, 'Nome', '12345');
 
-insert into endereco (id, bairro, cep, cidade, complemento, estado, logradouro, numero) values (10, 'Centro', '96083-130', 'Lavras do Sul', '', 'RS', 'Rua dos Bobos', 0)
-insert into usuario (id, cpf, data_nascimento, email, id_endereco, nome, senha) values (null, '35748655624', '1980-01-01', 'usuario10@teste.com', 10, 'Nome', '12345')
+insert into endereco (id, bairro, cep, cidade, complemento, estado, logradouro, numero) values (10, 'Centro', '96083-130', 'Lavras do Sul', '', 'RS', 'Rua dos Bobos', 0);
+insert into usuario (id, cpf, data_nascimento, email, id_endereco, nome, senha) values (null, '35748655624', '1980-01-01', 'usuario10@teste.com', 10, 'Nome', '12345');
 
 insert into endereco (id, bairro, cep, cidade, complemento, estado, logradouro, numero) values (11, 'Centro', '96083-130', 'Lavras do Sul', '', 'RS', 'Rua dos Bobos', 0);
 insert into usuario (id, cpf, data_nascimento, email, id_endereco, nome, senha) values (null, '76657659121', '1980-01-01', 'usuario11@teste.com', 11, 'Nome', '12345');
