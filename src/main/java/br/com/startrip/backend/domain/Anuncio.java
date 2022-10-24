@@ -1,31 +1,19 @@
 package br.com.startrip.backend.domain;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -70,5 +58,18 @@ public class Anuncio {
 	@PrePersist
 	void prePersist() {
 		this.deleted = Boolean.FALSE;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+		Anuncio anuncio = (Anuncio) o;
+		return id != null && Objects.equals(id, anuncio.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
 	}
 }

@@ -1,22 +1,19 @@
 package br.com.startrip.backend.controller.request;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.persistence.ElementCollection;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import br.com.startrip.backend.domain.FormaPagamento;
 import br.com.startrip.backend.domain.TipoAnuncio;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import javax.persistence.ElementCollection;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.List;
+
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

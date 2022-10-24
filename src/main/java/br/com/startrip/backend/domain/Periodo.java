@@ -1,20 +1,16 @@
 package br.com.startrip.backend.domain;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Embeddable;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@Getter
-@Setter
+import javax.persistence.Embeddable;
+import java.time.LocalDateTime;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

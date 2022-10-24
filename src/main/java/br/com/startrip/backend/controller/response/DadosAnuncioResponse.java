@@ -1,18 +1,16 @@
 package br.com.startrip.backend.controller.response;
 
-import java.util.List;
-
 import br.com.startrip.backend.domain.FormaPagamento;
 import br.com.startrip.backend.domain.Imovel;
 import br.com.startrip.backend.domain.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
