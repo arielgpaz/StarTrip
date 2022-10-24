@@ -17,9 +17,9 @@ spring:
         format_sql: true
         type: trace
     hibernate:
-      ddl-auto: update              # none,create,update,validate
+      ddl-auto: none              # none,create,update,validate
 
 logging:
   level:
     org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: trace
+#    org.hibernate.type.descriptor.sql: trace

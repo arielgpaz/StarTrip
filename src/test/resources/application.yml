@@ -4,24 +4,11 @@ server:
     include-binding-errors: always
 
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    url: jdbc:h2:file:~/tcc-h2-test-db
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  jpa:
-#    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
+    url: jdbc:postgresql://localhost:5432/startrip
+    username: startrip
+    password: startrip
+    driver-class-name: org.postgresql.Driver
   sql:
     init:
       mode: always
-
-#logging:
-#  level:
-#    org.hibernate.SQL: debug
-#    org.hibernate.type.descriptor.sql: trace
