@@ -153,7 +153,6 @@ class AnuncioServiceTest {
 
 		service.excluirAnuncio(1L);
 
-		Mockito.verify(anuncioRepository).save(anuncioCaptor.capture());
-		assertTrue(anuncioCaptor.getValue().isDeleted());
+		assertTrue(anuncio.isDeleted());
 	}
 }

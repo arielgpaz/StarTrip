@@ -19,6 +19,7 @@ public class AnuncioFactory {
 				.imovel(ImovelFactory.criaImovel())
 				.valorDiaria(BigDecimal.valueOf(100))
 				.formasAceitas(Arrays.asList(FormaPagamento.DINHEIRO, FormaPagamento.CARTAO_CREDITO, FormaPagamento.CARTAO_DEBITO))
+				.deleted(false)
 				.build();
 	}
 
