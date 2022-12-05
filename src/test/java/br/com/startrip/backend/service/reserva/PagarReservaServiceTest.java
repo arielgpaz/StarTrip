@@ -4,6 +4,8 @@ import br.com.startrip.backend.domain.FormaPagamento;
 import br.com.startrip.backend.domain.Reserva;
 import br.com.startrip.backend.domain.StatusPagamento;
 import br.com.startrip.backend.exception.reserva.FormaPagamentoException;
+import br.com.startrip.backend.exception.reserva.IdReservaNaoEncontradoException;
+import br.com.startrip.backend.exception.reserva.StatusPagamentoException;
 import br.com.startrip.backend.factories.ReservaFactory;
 import br.com.startrip.backend.repository.ReservaRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,14 +30,16 @@ class PagarReservaServiceTest {
 	@Mock
 	private ReservaRepository reservaRepository;
 
+	Reserva reserva;
+
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
+		reserva = ReservaFactory.criaReserva(StatusPagamento.PENDENTE);
 	}
 
 	@Test
 	void givenReservaComPagamentoPendente_whenPagarReserva_thenReturnReservaComPagamentoRealizado() {
-		Reserva reserva = ReservaFactory.criaReserva(StatusPagamento.PENDENTE);
 
 		when(reservaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(reserva));
 		when(reservaRepository.save(any(Reserva.class))).thenReturn(reserva);
@@ -50,9 +54,25 @@ class PagarReservaServiceTest {
 		verify(reservaRepository).save(any(Reserva.class));
 	}
 
+	@Test
+	void givenIdReservaInexistente_whenPagarReserva_thenThrowsIdReservaNaoEncontradoException() {
+
+		when(reservaRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+		assertThrows(IdReservaNaoEncontradoException.class, () -> service.pagarReserva(1L, FormaPagamento.DINHEIRO));
+	}
+
+	@Test
+	void givenReservaComPagamentoDiferenteDePendente_whenPagarReserva_thenThrowsStatusPagamentoException() {
+		reserva.getPagamento().setStatus(StatusPagamento.CANCELADO);
+
+		when(reservaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(reserva));
+
+		assertThrows(StatusPagamentoException.class, () -> service.pagarReserva(2L, FormaPagamento.DINHEIRO));
+	}
+
 	@Test()
-	void givenReservaQueNaoAceitaPIX_whenPagarReservaComPix_thenReturnFormaPagamentoException() {
-		Reserva reserva = ReservaFactory.criaReserva(StatusPagamento.PENDENTE);
+	void givenReservaQueNaoFormaPagamentoEscolhida_whenPagarReserva_thenReturnFormaPagamentoException() {
 
 		when(reservaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(reserva));
 
