@@ -54,9 +54,9 @@ public class AnuncioService {
     }
 
     public Page<Anuncio> listarAnunciosDeAnunciante(Pageable pageable, Long idAnunciante) {
-        Usuario usuario = usuarioRepository.findById(idAnunciante)
+        Usuario anunciante = usuarioRepository.findById(idAnunciante)
                 .orElseThrow(() -> new IdUsuarioInexistenteException(idAnunciante));
-        return anuncioRepository.findByAnuncianteAndDeletedIs(pageable, usuario, false);
+        return anuncioRepository.findByAnuncianteAndDeletedIs(pageable, anunciante, false);
     }
 
     public void excluirAnuncio(Long idAnuncio) {
