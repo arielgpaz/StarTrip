@@ -1,13 +1,13 @@
 package br.com.startrip.backend.factories;
 
-import java.time.LocalDate;
-
 import br.com.startrip.backend.domain.Usuario;
+
+import java.time.LocalDate;
 
 public class UsuarioFactory {
 	public static Usuario criaUsuarioAnunciante() {
 		return Usuario.builder()
-				.id(14L)
+				.id(1L)
 				.nome("Jesus")
 				.cpf("12345678901")
 				.dataNascimento(LocalDate.of(0, 12, 25))

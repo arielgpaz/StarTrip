@@ -6,7 +6,7 @@ import br.com.startrip.backend.domain.TipoImovel;
 public class ImovelFactory {
 	public static Imovel criaImovel() {
 		return Imovel.builder()
-				.id(12L)
+				.id(1L)
 				.endereco(EnderecoFactory.criaEndereco())
 				.tipoImovel(TipoImovel.HOTEL)
 				.identificacao("Hotel dos romeiros")
