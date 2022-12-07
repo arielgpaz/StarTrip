@@ -1,5 +1,6 @@
 package br.com.startrip.backend.factories;
 
+import br.com.startrip.backend.controller.request.CadastrarReservaRequest;
 import br.com.startrip.backend.domain.Reserva;
 import br.com.startrip.backend.domain.StatusPagamento;
 
@@ -15,6 +16,15 @@ public class ReservaFactory {
 				.periodo(PeriodoFactory.criaPeriodo())
 				.pagamento(PagamentoFactory.criaPagamento(statusPagamento))
 				.dataHoraReserva(LocalDateTime.now())
+				.build();
+	}
+
+	public static CadastrarReservaRequest criaReservaRequest() {
+		return CadastrarReservaRequest.builder()
+				.idSolicitante(1L)
+				.idAnuncio(1L)
+				.periodo(PeriodoFactory.criaPeriodo())
+				.quantidadePessoas(2)
 				.build();
 	}
 }
