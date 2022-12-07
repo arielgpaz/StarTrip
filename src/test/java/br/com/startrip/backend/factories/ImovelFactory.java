@@ -13,7 +13,7 @@ public class ImovelFactory {
 				.endereco(EnderecoFactory.criaEndereco())
 				.tipoImovel(TipoImovel.HOTEL)
 				.identificacao("Hotel dos romeiros")
-				.proprietario(UsuarioFactory.criaUsuarioAnunciante())
+				.proprietario(UsuarioFactory.criaUsuario())
 				.deleted(false)
 				.build();
 	}

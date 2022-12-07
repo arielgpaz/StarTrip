@@ -53,7 +53,7 @@ class AnuncioServiceTest {
 		MockitoAnnotations.openMocks(this);
 		request = AnuncioFactory.criarAnuncioRequest();
 		imovel = ImovelFactory.criaImovel();
-		usuario = UsuarioFactory.criaUsuarioAnunciante();
+		usuario = UsuarioFactory.criaUsuario();
 		anuncio = AnuncioFactory.criaAnuncio();
 	}
 

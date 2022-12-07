@@ -49,7 +49,7 @@ class ImovelServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         request = ImovelFactory.criaImovelRequest();
-        proprietario = UsuarioFactory.criaUsuarioAnunciante();
+        proprietario = UsuarioFactory.criaUsuario();
         imovel = ImovelFactory.criaImovel();
     }
 

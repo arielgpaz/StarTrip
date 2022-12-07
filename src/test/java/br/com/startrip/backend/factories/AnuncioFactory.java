@@ -15,7 +15,7 @@ public class AnuncioFactory {
 				.id(1L)
 				.descricao("Quarto com sacada de frente para a praia")
 				.tipoAnuncio(TipoAnuncio.QUARTO)
-				.anunciante(UsuarioFactory.criaUsuarioAnunciante())
+				.anunciante(UsuarioFactory.criaUsuario())
 				.imovel(ImovelFactory.criaImovel())
 				.valorDiaria(BigDecimal.valueOf(100))
 				.formasAceitas(Arrays.asList(FormaPagamento.DINHEIRO, FormaPagamento.CARTAO_CREDITO, FormaPagamento.CARTAO_DEBITO))
