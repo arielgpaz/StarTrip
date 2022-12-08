@@ -5,12 +5,10 @@ import br.com.startrip.backend.controller.response.DadosAnuncioResponse;
 import br.com.startrip.backend.controller.response.DadosSolicitanteResponse;
 import br.com.startrip.backend.controller.response.InformacaoReservaResponse;
 import br.com.startrip.backend.domain.*;
-import br.com.startrip.backend.exception.anuncio.IdAnuncioNaoEncontradoException;
 import br.com.startrip.backend.exception.reserva.*;
-import br.com.startrip.backend.exception.usuario.IdUsuarioInexistenteException;
-import br.com.startrip.backend.repository.AnuncioRepository;
 import br.com.startrip.backend.repository.ReservaRepository;
-import br.com.startrip.backend.repository.UsuarioRepository;
+import br.com.startrip.backend.service.anuncio.AnuncioService;
+import br.com.startrip.backend.service.usuario.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,34 +23,43 @@ import java.util.List;
 public class RealizarReservaService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
     @Autowired
-    private AnuncioRepository anuncioRepository;
+    private AnuncioService anuncioService;
 
     @Autowired
     private ReservaRepository reservaRepository;
 
     public InformacaoReservaResponse realizarUmaReserva(CadastrarReservaRequest cadastrarReservaRequest) {
-        Usuario solicitante = this.buscarSolicitante(cadastrarReservaRequest);
-        Anuncio anuncio = this.buscarAnuncio(cadastrarReservaRequest);
+        Usuario solicitante = usuarioService.buscarUsuarioPorId(cadastrarReservaRequest.getIdSolicitante());
+        Anuncio anuncio = anuncioService.buscarAnuncioPorId(cadastrarReservaRequest.getIdAnuncio());
 
-        LocalDate dataInicial = cadastrarReservaRequest.getPeriodo().getDataHoraInicial().toLocalDate();
-        LocalDate dataFinal = cadastrarReservaRequest.getPeriodo().getDataHoraFinal().toLocalDate();
+        if (anuncio.getAnunciante() != null
+                && solicitante.getId().equals(anuncio.getAnunciante().getId())) {
+            throw new SolicitanteMesmoAnuncianteException();
+        }
 
-        this.verificarDisponibilidadeDoEstabelecimento(anuncio, dataInicial, dataFinal);
+        LocalDate dataInicialRequest = cadastrarReservaRequest.getPeriodo().getDataHoraInicial().toLocalDate();
+        LocalDate dataFinalRequest = cadastrarReservaRequest.getPeriodo().getDataHoraFinal().toLocalDate();
 
-        LocalDateTime dataHoraInicioReserva = LocalDateTime.of(dataInicial, LocalTime.parse("14:00"));
-        LocalDateTime dataHoraFimReserva = LocalDateTime.of(dataFinal, LocalTime.parse("12:00"));
+        this.verificarDisponibilidadeDoEstabelecimento(anuncio.getId(), dataInicialRequest, dataFinalRequest);
+
+        LocalDateTime dataHoraInicioReserva = LocalDateTime.of(dataInicialRequest, LocalTime.parse("14:00"));
+        LocalDateTime dataHoraFimReserva = LocalDateTime.of(dataFinalRequest, LocalTime.parse("12:00"));
         Periodo periodo = new Periodo(dataHoraInicioReserva, dataHoraFimReserva);
 
-        long quantidadeDiarias = this.calcularQuantidadeDiarias(dataInicial, dataFinal);
+        long quantidadeDiarias = this.calcularQuantidadeDiarias(dataInicialRequest, dataFinalRequest);
         Pagamento pagamento = this.definirPagamento(anuncio.getValorDiaria(), quantidadeDiarias);
 
-        this.avaliarCondicoesMinimasDosEstabelecimentos(cadastrarReservaRequest, anuncio, quantidadeDiarias);
+        this.avaliarCondicoesMinimasDosEstabelecimentos(cadastrarReservaRequest.getQuantidadePessoas(), anuncio.getImovel(), quantidadeDiarias);
 
         Reserva reserva = this.salvarReserva(cadastrarReservaRequest, solicitante, anuncio, periodo, pagamento);
 
+        return this.construirReservaResponse(cadastrarReservaRequest, solicitante, anuncio, periodo, pagamento, reserva);
+    }
+
+    private InformacaoReservaResponse construirReservaResponse(CadastrarReservaRequest cadastrarReservaRequest, Usuario solicitante, Anuncio anuncio, Periodo periodo, Pagamento pagamento, Reserva reserva) {
         DadosSolicitanteResponse dadosSolicitanteResponse = DadosSolicitanteResponse.builder()
                 .id(solicitante.getId())
                 .nome(solicitante.getNome())
@@ -87,6 +94,23 @@ public class RealizarReservaService {
                 .build());
     }
 
+    private void avaliarCondicoesMinimasDosEstabelecimentos(Integer quantidadePessoas, Imovel imovel, long quantidadeDiarias) {
+
+        if (imovel != null
+                && imovel.getTipoImovel() != null
+                && TipoImovel.HOTEL.equals(imovel.getTipoImovel())
+                && quantidadePessoas < 2) {
+            throw new MinimoDuasPessoasParaHotelException();
+        }
+
+        if (imovel != null
+                && imovel.getTipoImovel() != null
+                && TipoImovel.POUSADA.equals(imovel.getTipoImovel())
+                && quantidadeDiarias < 5) {
+            throw new MinimoDeDiariasParaPousadaException();
+        }
+    }
+
     private Pagamento definirPagamento(BigDecimal valorDiaria, long quantidadeDiarias) {
         return Pagamento.builder()
                 .valorTotal(valorDiaria.multiply(BigDecimal.valueOf(quantidadeDiarias)))
@@ -94,70 +118,35 @@ public class RealizarReservaService {
                 .build();
     }
 
-    private void avaliarCondicoesMinimasDosEstabelecimentos(CadastrarReservaRequest cadastrarReservaRequest, Anuncio anuncio, long quantidadeDiarias) {
+    private long calcularQuantidadeDiarias(LocalDate dataInicialRequest, LocalDate dataFinalRequest) {
 
-        if (anuncio.getImovel() != null
-                && anuncio.getImovel().getTipoImovel() != null
-                && TipoImovel.HOTEL.equals(anuncio.getImovel().getTipoImovel())
-                && cadastrarReservaRequest.getQuantidadePessoas() < 2) {
-            throw new MinimoDuasPessoasParaHotelException();
-        }
-
-        if (anuncio.getImovel() != null
-                && anuncio.getImovel().getTipoImovel() != null
-                && TipoImovel.POUSADA.equals(anuncio.getImovel().getTipoImovel())
-                && quantidadeDiarias < 5) {
-            throw new MinimoDeDiariasParaPousadaException();
-        }
-    }
-
-    private Anuncio buscarAnuncio(CadastrarReservaRequest cadastrarReservaRequest) {
-
-        Anuncio anuncio = anuncioRepository.findById(cadastrarReservaRequest.getIdAnuncio())
-                .orElseThrow(() -> new IdAnuncioNaoEncontradoException(cadastrarReservaRequest.getIdAnuncio()));
-
-        if (anuncio.getAnunciante() != null
-                && cadastrarReservaRequest.getIdSolicitante().equals(anuncio.getAnunciante().getId())) {
-            throw new SolicitanteMesmoAnuncianteException();
-        }
-
-        return anuncio;
-    }
-
-    private Usuario buscarSolicitante(CadastrarReservaRequest cadastrarReservaRequest) {
-        return usuarioRepository.findById(cadastrarReservaRequest.getIdSolicitante())
-                .orElseThrow(() -> new IdUsuarioInexistenteException(cadastrarReservaRequest.getIdSolicitante()));
-    }
-
-    private void verificarDisponibilidadeDoEstabelecimento(Anuncio anuncio, LocalDate dataInicial, LocalDate dataFinal) {
-
-        List<Reserva> reservasExistentes = reservaRepository.findByAnuncioId(anuncio.getId());
-
-        for (Reserva reserva : reservasExistentes) {
-
-            LocalDate dataInicioReservaExistente = reserva.getPeriodo().getDataHoraInicial().toLocalDate();
-            LocalDate dataFinalReservaExistente = reserva.getPeriodo().getDataHoraFinal().toLocalDate();
-
-            if ((dataInicial.isBefore(dataFinalReservaExistente) && dataFinal.isAfter(dataInicioReservaExistente))
-                    && (reserva.getPagamento().getStatus().equals(StatusPagamento.PAGO) ||
-                    reserva.getPagamento().getStatus().equals(StatusPagamento.PENDENTE))) {
-                throw new AnuncioJaReservadoException();
-            }
-        }
-    }
-
-    private long calcularQuantidadeDiarias(LocalDate dataInicial, LocalDate dataFinal) {
-
-        if (dataInicial.isAfter(dataFinal)) {
+        if (dataInicialRequest.isAfter(dataFinalRequest)) {
             throw new DataFinalMenorException();
         }
 
-        long quantidadeDiarias = ChronoUnit.DAYS.between(dataInicial, dataFinal);
+        long quantidadeDiarias = ChronoUnit.DAYS.between(dataInicialRequest, dataFinalRequest);
 
         if (quantidadeDiarias < 1) {
             throw new NumeroMinimoDiariasException();
         }
 
         return quantidadeDiarias;
+    }
+
+    private void verificarDisponibilidadeDoEstabelecimento(Long idAnuncio, LocalDate dataInicialRequest, LocalDate dataFinalRequest) {
+
+        List<Reserva> reservasExistentes = reservaRepository.findByAnuncioId(idAnuncio);
+
+        for (Reserva reserva : reservasExistentes) {
+
+            LocalDate dataInicioReservaExistente = reserva.getPeriodo().getDataHoraInicial().toLocalDate();
+            LocalDate dataFinalReservaExistente = reserva.getPeriodo().getDataHoraFinal().toLocalDate();
+
+            if ((dataInicialRequest.isBefore(dataFinalReservaExistente) && dataFinalRequest.isAfter(dataInicioReservaExistente))
+                    && (reserva.getPagamento().getStatus().equals(StatusPagamento.PAGO) ||
+                    reserva.getPagamento().getStatus().equals(StatusPagamento.PENDENTE))) {
+                throw new AnuncioJaReservadoException();
+            }
+        }
     }
 }

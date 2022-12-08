@@ -59,6 +59,11 @@ public class AnuncioService {
         return anuncioRepository.findByAnuncianteAndDeletedIs(pageable, anunciante, false);
     }
 
+    public Anuncio buscarAnuncioPorId(Long idAnuncio) {
+        return anuncioRepository.findById(idAnuncio)
+                .orElseThrow(() -> new IdAnuncioNaoEncontradoException(idAnuncio));
+    }
+
     public void excluirAnuncio(Long idAnuncio) {
         Anuncio anuncioParaExcluir = anuncioRepository.findByIdAndDeletedIs(idAnuncio, false)
                 .orElseThrow(() -> new IdAnuncioNaoEncontradoException(idAnuncio));
