@@ -155,4 +155,15 @@ class AnuncioServiceTest {
 
 		assertTrue(anuncio.isDeleted());
 	}
+
+	@Test
+	void givenIdAnuncioValido_whenBuscarAnuncioPorId_thenReturnAnuncio() {
+		when(anuncioRepository.findById(anyLong()))
+				.thenReturn(Optional.ofNullable(anuncio));
+
+		Anuncio response = service.buscarAnuncioPorId(1L);
+
+		assertNotNull(response);
+		assertEquals(1L, response.getId());
+	}
 }
