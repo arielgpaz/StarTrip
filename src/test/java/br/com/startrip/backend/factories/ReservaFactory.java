@@ -13,7 +13,7 @@ public class ReservaFactory {
 				.solicitante(UsuarioFactory.criaUsuarioSolicitante())
 				.anuncio(AnuncioFactory.criaAnuncio())
 				.quantidadePessoas(3)
-				.periodo(PeriodoFactory.criaPeriodo())
+				.periodo(PeriodoFactory.criaPeriodoFeriasVerao())
 				.pagamento(PagamentoFactory.criaPagamento(statusPagamento))
 				.dataHoraReserva(LocalDateTime.now())
 				.build();
@@ -23,7 +23,7 @@ public class ReservaFactory {
 		return CadastrarReservaRequest.builder()
 				.idSolicitante(1L)
 				.idAnuncio(1L)
-				.periodo(PeriodoFactory.criaPeriodo())
+				.periodo(PeriodoFactory.criaPeriodoFeriasInverno())
 				.quantidadePessoas(2)
 				.build();
 	}

@@ -44,7 +44,7 @@ class ListarReservaSolicitanteServiceTest {
         when(reservaRepository.findBySolicitanteIdAndPeriodoDataHoraInicialBetweenAndPeriodoDataHoraFinalBetween(any(), anyLong(), any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(List.of(reserva)));
 
-        Page<Reserva> response = service.listarReservaDeSolicitante(PageRequest.of(0, 5), 1L, PeriodoFactory.criaPeriodo());
+        Page<Reserva> response = service.listarReservaDeSolicitante(PageRequest.of(0, 5), 1L, PeriodoFactory.criaPeriodoFeriasVerao());
 
         verify(reservaRepository).findBySolicitanteIdAndPeriodoDataHoraInicialBetweenAndPeriodoDataHoraFinalBetween(any(), anyLong(), any(), any(), any(), any());
         assertNotNull(response);
