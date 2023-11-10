@@ -42,27 +42,27 @@ public class ReservaController {
         return realizarReservaService.realizarUmaReserva(cadastrarReservaRequest);
     }
 
-    @GetMapping("/solicitantes/{idSolicitante}")
+    @GetMapping("/solicitante/id/{idSolicitante}")
     public Page<Reserva> listarReservaSolicitante(@PageableDefault(sort = "periodoDataHoraFinal", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long idSolicitante, Periodo periodo) {
         return listarReservaSolicitanteService.listarReservaDeSolicitante(pageable, idSolicitante, periodo);
     }
 
-    @GetMapping("/anuncios/anunciantes/{idAnunciante}")
+    @GetMapping("/anunciante/id/{idAnunciante}")
     public Page<Reserva> listarReservaDeAnunciante(@PageableDefault(sort = "periodoDataHoraFinal", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long idAnunciante) {
         return listarReservaAnuncianteService.listarReservaDeAnunciante(pageable, idAnunciante);
     }
 
-    @PutMapping("/{idReserva}/pagamentos")
+    @PutMapping("/pagamento/id/{idReserva}")
     public void pagarReserva(@PathVariable Long idReserva, @RequestBody FormaPagamento formaPagamento) {
         pagarReservaService.pagarReserva(idReserva, formaPagamento);
     }
 
-    @PutMapping("{idReserva}/pagamentos/cancelar")
+    @PutMapping("/cancelamento/id/{idReserva}")
     public void cancelarReserva(@PathVariable Long idReserva) {
         cancelarReservaService.cancelarReserva(idReserva);
     }
 
-    @PutMapping("{idReserva}/pagamentos/estornar")
+    @PutMapping("/estorno/id/{idReserva}")
     public void estornarReserva(@PathVariable Long idReserva) {
         estornarReservaService.estornarReserva(idReserva);
     }
